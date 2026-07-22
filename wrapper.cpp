@@ -1,14 +1,13 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
-
 #include "terrain.hpp"
 #include "engine.hpp"
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pso_core, m) {
-    py::class_<Terrain>(m, "Terrain")
-        .def(py::init<float, float>())
+PYBIND11_MODULE(pso_core,m) {
+    py::class_<Terrain>(m,"Terrain")
+        .def(py::init<float,float>())
         .def("set_target", &Terrain::set_target)
         .def("regenerate_decoys", &Terrain::regenerate_decoys)
         .def("fitness_at", &Terrain::fitness_at)

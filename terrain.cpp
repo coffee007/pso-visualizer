@@ -27,10 +27,10 @@ public:
         decoys.clear();
         for (int i = 0; i < count; ++i) {
             Decoy d;
-            d.x = random_float(-0.75f * world_half, 0.75f * world_half);
-            d.y = random_float(-0.75f * world_half, 0.75f * world_half);
-            d.amp = random_float(0.30f, 0.55f);
-            d.sigma = random_float(55.0f, 100.0f);
+            d.x = ranf(-0.75f * world_half, 0.75f * world_half);
+            d.y = ranf(-0.75f * world_half, 0.75f * world_half);
+            d.amp = ranf(0.30f, 0.55f);
+            d.sigma = ranf(55.0f, 100.0f);
             decoys.push_back(d);
         }
     }
@@ -57,7 +57,7 @@ public:
 
 private:
     mutable mt19937 rng{random_device{}()};
-    float random_float(float min_val, float max_val) const {
+    float ranf(float min_val, float max_val) const {
         uniform_real_distribution<float> dist(min_val, max_val);
         return dist(rng);
     }

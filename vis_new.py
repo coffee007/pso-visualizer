@@ -41,11 +41,9 @@ def main():
     clock = pygame.time.Clock()
     font = pygame.font.SysFont("Consolas", 14)
 
-    # 1. Initialize C++ Terrain & Swarm
     terrain = pso_core.Terrain(float(WORLD_HALF), 140.0)
     terrain.regenerate_decoys(3)
 
-    # Initial target, expressed in screen coordinates and converted to world coordinates.
     initial_target_world = screen_to_world(CANVAS_W / 2 + 100, HEIGHT / 2 - 100)
     terrain.set_target(*initial_target_world)
 
@@ -53,11 +51,10 @@ def main():
     num_particles = 60
     swarm = pso_core.Swarm(terrain, num_particles, max_vel)
 
-    # ONE-TIME DEBUG PRINT (Placed safely OUTSIDE the main loop)
     initial_pos = swarm.get_pos()
-    print(f"[DEBUG] Initialized Swarm with {len(initial_pos)} particles from C++.")
+    print(f"initialized Swarm with {len(initial_pos)} particles from C++.")
     if len(initial_pos) > 0:
-        print(f"[DEBUG] First particle position: {initial_pos[0]}")
+        print(f"first particle position: {initial_pos[0]}")
 
     # Simulation Controls
     running = True
@@ -86,7 +83,6 @@ def main():
                 if mx < CANVAS_W:
                     terrain.set_target(*screen_to_world(mx, my))
 
-        # --- Physics Update ---
         if not paused:
             swarm.step(w, c1, c2, max_vel)
 
