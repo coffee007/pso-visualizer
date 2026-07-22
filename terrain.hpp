@@ -1,0 +1,71 @@
+#pragma once
+
+#include <vector>
+#include <cmath>
+#include <random>
+#include <algorithm>
+
+struct Decoy {
+    float x, y;
+    float amp;
+    float sigma;
+};
+
+class Terrain {
+public:
+    float world_half;
+    float target_sigma;
+    float target_x = 0.0f;
+    float target_y = 0.0f;
+    std::vector<Decoy> decoys;
+
+    Terrain(float world_half = 380.0f, float target_sigma = 140.0f)
+        : world_half(world_half), target_sigma(target_sigma) {}
+
+    void set_target(float x, float y) {
+        target_x = x;
+        target_y = y;
+    }
+
+    void regenerate_decoys(int count) {
+        decoys.clear();
+        for (int i = 0; i < count; ++i) {
+            Decoy d;
+            d.x = random_float(-0.75f * world_half, 0.75f * world_half);
+            d.y = random_float(-0.75f * world_half, 0.75f * world_half);
+            d.amp = random_float(0.30f, 0.55f);
+            d.sigma = random_float(55.0f, 100.0f);
+            decoys.push_back(d);
+        }
+    }
+
+    float fitness_at(float x, float y) const {
+        float dx = x - target_x;
+        float dy = y - target_y;
+        float target_val = std::exp(-(dx * dx + dy * dy) / (2.0f * target_sigma * target_sigma));
+
+        float max_decoy_val = 0.0f;
+        for (const auto& d : decoys) {
+            float ddx = x - d.x;
+            float ddy = y - d.y;
+            float decoy_val = d.amp * std::exp(-(ddx * ddx + ddy * ddy) / (2.0f * d.sigma * d.sigma));
+            if (decoy_val > max_decoy_val) {
+                max_decoy_val = decoy_val;
+            }
+        }
+
+        return target_val + max_decoy_val * (1.0f - target_val);
+    }
+
+    float get_world_half() const { return world_half; }
+    float get_target_x() const { return target_x; }
+    float get_target_y() const { return target_y; }
+
+private:
+    mutable std::mt19937 rng{std::random_device{}()};
+
+    float random_float(float min_val, float max_val) const {
+        std::uniform_real_distribution<float> dist(min_val, max_val);
+        return dist(rng);
+    }
+};
