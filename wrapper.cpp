@@ -23,5 +23,6 @@ PYBIND11_MODULE(pso_core,m) {
         .def("get_pos", &PSOEngine::get_pos)
         .def("get_best_x", &PSOEngine::get_best_x)
         .def("get_best_y", &PSOEngine::get_best_y)
-        .def("get_num_particles", &PSOEngine::get_num_particles);
+        .def("get_num_particles", &PSOEngine::get_num_particles)
+        .def("retarget", &PSOEngine::retarget);
 }

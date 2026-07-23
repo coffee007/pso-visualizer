@@ -5,6 +5,7 @@
 #include <array>
 #include <random>
 
+
 class PSOEngine {
 public:
     PSOEngine(const Terrain& terrain, int num_particles = 200, float v_max = 7.0f);
@@ -21,6 +22,8 @@ public:
     float get_best_y() const { return global_best_pos[1]; }
     float get_best_score() const { return global_best; }
 
+    void retarget();
+
 private:
     const Terrain& terrain_;
     float default_v_max_;
@@ -34,13 +37,16 @@ private:
 
     float global_best = -1e9f;
     std::array<float, 2> global_best_pos = {0.0f, 0.0f};
-    
-    // gridsize = {x_min, x_max, y_min, y_max} (Set to Pygame bounds)
-    std::vector<float> gridsize = {-800.0f, 800.0f, -600.0f, 600.0f}; 
+    std::vector<float> gridsize = {-100.0f, 100.0f, -600.0f, 600.0f}; 
 
     mutable std::random_device rd;
     mutable std::mt19937 gen;
 
     // function to optimize
     float f(float x, float y) const;
+
+    bool watch_active_ = false;
+    int watch_countdown_ = 0;
+    int watch_rounds_left_ = 0;
+    void inject_scouts(float frac);   // add near f()
 };
